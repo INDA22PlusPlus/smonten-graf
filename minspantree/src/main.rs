@@ -45,6 +45,8 @@ impl Parser {
             println!("__________________\n");
             println!("{} {}", n, m);
 
+
+            let mut edges: Vec<(usize, usize, i32)> = vec![];
             for edge_nr in 0..m {
                 let cur_line = self.next();
                 let edge_params: Vec<&str> = cur_line.split(" ").collect();
@@ -53,8 +55,32 @@ impl Parser {
                 let w: i32 = edge_params[2].parse::<i32>().unwrap();
 
                 println!("   {} {} {}", u, v, w);
+                edges.push((u, v, w));
             }
 
+            let case = Case::new(n, m, edges);
+
         }
+    }
+}
+
+
+struct Case {
+    n: usize,
+    m: usize,
+    am: Vec<Vec<(bool, i32)>>
+}
+
+impl Case {
+    fn new(n: usize, m: usize, edges: Vec<(usize, usize, i32)>) -> Case {
+        let mut am = vec![vec![(false, 0); n]; n];
+        for edge in edges {
+            let u = edge.0;
+            let v = edge.1;
+            let w = edge.2;
+            am[u][v] = (true, w);
+            am[v][u] = (true, w);
+        }
+        Case { n, m, am }
     }
 }
